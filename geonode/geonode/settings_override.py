@@ -3,18 +3,34 @@ import os
 
 # load the defaults settings
 from geonode.settings import *
-from geonode.settings import TEMPLATES, INSTALLED_APPS, IMPORTER_HANDLERS
+from geonode.settings import (
+    TEMPLATES,
+    INSTALLED_APPS,
+    IMPORTER_HANDLERS,
+    AUTHENTICATION_BACKENDS,
+    LOCALE_PATHS,
+    PROJECT_ROOT
+)
 
 
 SITENAME = os.getenv("SITENAME", "thuenen_atlas")
 X_FRAME_OPTIONS = "SAMEORIGIN"
-STATIC_ROOT = "/mnt/volumes/statics/static/"
-MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
 
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
 # It is used for relative settings elsewhere.
 LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
+STATIC_ROOT = "/mnt/volumes/statics/static/"
+MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
+
+
+INSTALLED_APPS += (
+    "atlas",
+    "subsites",
+    "externalapplications",
+    "importer_datapackage",
+    "thuenen_app",
+)
 
 # Additional directories which hold static files
 # - Give priority to local ones
@@ -41,7 +57,7 @@ LOGGING = {
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
     "handlers": {
         "console": {
-            "level": "ERROR",
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
@@ -54,11 +70,11 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "ERROR",
+            "level": "INFO",
         },
         "geonode": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "DEBUG",
         },
         "geoserver-restconfig.catalog": {
             "handlers": ["console"],
@@ -74,15 +90,15 @@ LOGGING = {
         },
         "celery": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "WARN",
         },
         "mapstore2_adapter.plugins.serializers": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "WARN",
         },
         "geonode_logstash.logstash": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "WARN",
         },
     },
 }
@@ -92,12 +108,7 @@ IMPORTER_HANDLERS = (
     *IMPORTER_HANDLERS,
 )
 
-INSTALLED_APPS += (
-    "atlas",
-    "externalapplications",
-    "importer_datapackage",
-    "thuenen_app",
-)
+ENABLE_SUBSITE_CUSTOM_THEMES = True
 
 # add extra translations
 # add to .po file in thuenen_atlas/geonode/apps/thuenen_app/locale
